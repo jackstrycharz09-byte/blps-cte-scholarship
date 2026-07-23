@@ -51,24 +51,15 @@ applicants and recommenders will get nothing until this is done:
 - Set `APP_URL` to the real production URL (used to build recommender links
   in emails).
 
-## 5. Reminder cron
+## 5. Reminder cron — done ✅
 
-`POST /api/cron/reminders` (guarded by the `CRON_SECRET` env var, sent as
-`Authorization: Bearer <CRON_SECRET>`) checks for recommenders who haven't
-submitted 7+ days after their invite and sends one reminder each.
+`POST /api/cron/reminders` checks for recommenders who haven't submitted
+7+ days after their invite and sends one reminder each. `vercel.json` runs
+it daily at 13:00 UTC. Vercel automatically sends
+`Authorization: Bearer $CRON_SECRET` on cron-triggered requests when a
+`CRON_SECRET` env var is set (which it is) — no extra wiring needed.
 
-If deploying to Vercel, add a `vercel.json`:
-
-```json
-{
-  "crons": [{ "path": "/api/cron/reminders", "schedule": "0 13 * * *" }]
-}
-```
-
-Vercel Cron calls the route without custom headers, so either switch the
-route to check a query param/Vercel's own cron auth, or trigger it from an
-external scheduler that can send the `Authorization` header. Test locally
-with:
+Test locally with:
 
 ```
 curl -X POST http://localhost:3000/api/cron/reminders \
