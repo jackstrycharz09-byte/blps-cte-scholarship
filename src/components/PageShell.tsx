@@ -5,6 +5,7 @@ export function PageShell({
   subtitle,
   minimal = false,
   wide = false,
+  titleHref,
   headerRight,
   children,
 }: {
@@ -12,12 +13,20 @@ export function PageShell({
   subtitle?: string;
   minimal?: boolean;
   wide?: boolean;
+  titleHref?: string;
   headerRight?: React.ReactNode;
   children: React.ReactNode;
 }) {
   return (
     <div className="flex min-h-screen flex-col bg-cream">
-      <Header title={title} subtitle={subtitle} minimal={minimal} wide={wide} right={headerRight} />
+      <Header
+        title={title}
+        subtitle={subtitle}
+        minimal={minimal}
+        wide={wide}
+        titleHref={titleHref}
+        right={headerRight}
+      />
       <main
         className={`mx-auto w-full flex-1 px-4 py-8 sm:px-6 ${
           wide ? "max-w-6xl" : "max-w-4xl"

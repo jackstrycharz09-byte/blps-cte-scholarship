@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { notFound } from "next/navigation";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
@@ -38,6 +39,12 @@ export default async function ApplicantDetailPage({
 
   return (
     <div className="space-y-6">
+      <Link
+        href="/dashboard"
+        className="inline-flex items-center gap-1 text-sm text-maroon hover:underline"
+      >
+        &larr; Back to all applicants
+      </Link>
       <div className="flex items-start justify-between gap-4">
         <div>
           <h2 className="font-heading text-2xl font-bold text-maroon">{applicant.fullName}</h2>

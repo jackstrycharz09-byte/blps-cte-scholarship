@@ -16,6 +16,7 @@ export default async function DashboardLayout({
     <PageShell
       title="Committee Review Dashboard"
       subtitle="CTE Scholarship"
+      titleHref="/dashboard"
       wide
       headerRight={
         <form
