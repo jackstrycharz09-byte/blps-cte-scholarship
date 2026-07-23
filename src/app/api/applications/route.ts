@@ -13,6 +13,14 @@ const REQUIRED_FILE_KINDS = ["resume", "transcript", "cte_proof"] as const;
 export async function POST(request: NextRequest) {
   const formData = await request.formData();
 
+  // Honeypot: a hidden field real users never fill. Bots that skip the
+  // browser and post directly still get caught here — pretend success so
+  // there's no useful signal to adapt against.
+  const honeypot = formData.get("company");
+  if (typeof honeypot === "string" && honeypot.trim().length > 0) {
+    return NextResponse.json({ id: "ok" }, { status: 201 });
+  }
+
   const raw = {
     fullName: formData.get("fullName"),
     email: formData.get("email"),

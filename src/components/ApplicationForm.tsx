@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useRouter } from "next/navigation";
@@ -29,6 +29,10 @@ type ApplicationFormInput = z.input<typeof applicationFormSchema>;
 
 export function ApplicationForm() {
   const router = useRouter();
+  // Honeypot: invisible to real users, but a basic bot filling every field
+  // will trip it. Checked client-side (skip the request) and server-side
+  // (the only check that matters for bots that skip the browser entirely).
+  const honeypotRef = useRef<HTMLInputElement>(null);
   const [files, setFiles] = useState<FileState>({
     resume: null,
     transcript: null,
@@ -77,6 +81,12 @@ export function ApplicationForm() {
 
   const onSubmit = handleSubmit(async (values) => {
     setSubmitError(null);
+
+    if (honeypotRef.current?.value) {
+      router.push("/apply/success");
+      return;
+    }
+
     const filesOk = validateFiles();
     if (!filesOk) return;
 
@@ -120,6 +130,15 @@ export function ApplicationForm() {
 
   return (
     <form onSubmit={onSubmit} className="space-y-8">
+      <input
+        ref={honeypotRef}
+        type="text"
+        name="company"
+        tabIndex={-1}
+        autoComplete="off"
+        aria-hidden="true"
+        className="absolute left-[-9999px] h-px w-px overflow-hidden"
+      />
       <Card className="space-y-4">
         <h2 className="font-heading text-lg font-bold text-maroon">Your information</h2>
         <div className="grid gap-4 sm:grid-cols-2">
