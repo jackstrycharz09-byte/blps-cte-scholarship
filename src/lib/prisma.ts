@@ -1,14 +1,9 @@
 import { PrismaClient } from "@/generated/prisma/client";
-import { PrismaBetterSqlite3 } from "@prisma/adapter-better-sqlite3";
+import { PrismaPg } from "@prisma/adapter-pg";
 
-// Local dev runs on SQLite via the better-sqlite3 driver adapter (Prisma 7
-// requires an explicit adapter — no bundled query engine). When moving to
-// the real Supabase/Postgres deployment, swap this for `@prisma/adapter-pg`
-// pointed at DATABASE_URL and flip the datasource provider in schema.prisma.
+// Prisma 7 requires an explicit driver adapter — no bundled query engine.
 function createPrismaClient() {
-  const adapter = new PrismaBetterSqlite3({
-    url: process.env.DATABASE_URL ?? "file:./dev.db",
-  });
+  const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL });
   return new PrismaClient({ adapter });
 }
 

@@ -1,21 +1,27 @@
 # Going live checklist
 
-This app runs entirely locally today (SQLite + filesystem storage + dev-only
-email logging). Before the real January 1 launch, work through this list.
+Status: database is live on Supabase Postgres (✅ done). File storage and
+email are still local/dev-only. Work through the rest of this list before
+the real January 1 launch.
 
-## 1. Database — swap SQLite for Supabase Postgres
+## 1. Database — done ✅
 
-1. Create a Supabase project, grab the Postgres connection string.
-2. `npm install @prisma/adapter-pg pg`
-3. In `prisma/schema.prisma`, change `datasource db { provider = "sqlite" }`
-   to `provider = "postgresql"`.
-4. In `src/lib/prisma.ts`, swap `PrismaBetterSqlite3` for `PrismaPg` from
-   `@prisma/adapter-pg`, pointed at `process.env.DATABASE_URL`.
-5. Set `DATABASE_URL` in your production env to the Supabase connection
-   string, then run `npx prisma migrate deploy`.
-6. Run `npm run seed` once against production to create real committee
-   accounts — **immediately change the printed placeholder emails/passwords**
-   in `prisma/seed.ts` first, or create accounts directly in the DB.
+Running on Supabase Postgres via `@prisma/adapter-pg`. Two connection
+strings matter and are **not interchangeable**:
+
+- **Transaction pooler** (port 6543) — what `DATABASE_URL` is set to. Used
+  by the running app (serverless-friendly, short-lived connections).
+- **Session pooler** (port 5432, same host) — required for schema changes
+  (`prisma db push` / `migrate`). The Transaction pooler silently hangs on
+  DDL because it doesn't support the session-level locks Prisma needs.
+
+To change the schema in the future: run `prisma db push` (or `migrate dev`)
+with `DATABASE_URL` temporarily pointed at the **session pooler** string,
+then leave the app's real `DATABASE_URL` on the transaction pooler.
+
+Committee accounts are seeded (`npm run seed`) — **replace the placeholder
+emails/passwords in `prisma/seed.ts`** before real use, and distribute the
+printed credentials securely (not over plain email).
 
 ## 2. File storage — swap local disk for Supabase Storage (or S3)
 

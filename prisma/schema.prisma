@@ -1,10 +1,5 @@
 // This is your Prisma schema file,
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
-//
-// Local dev uses SQLite to avoid a Docker dependency. Fields deliberately
-// avoid Postgres-only features (no native `enum`) so switching the
-// datasource `provider` to "postgresql" for the real Supabase deployment
-// is a one-line change, not a schema rewrite.
 
 generator client {
   provider = "prisma-client"
@@ -12,7 +7,7 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
+  provider = "postgresql"
 }
 
 // status: "under_review" | "recommended" | "not_selected" | "awarded"
