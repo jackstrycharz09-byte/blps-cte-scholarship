@@ -63,7 +63,7 @@ export async function POST(
       return NextResponse.json({ error: err }, { status: 400 });
     }
     const buffer = Buffer.from(await file.arrayBuffer());
-    const storagePath = await saveFile(buffer, file.name);
+    const storagePath = await saveFile(buffer, file.name, file.type);
     const created = await prisma.uploadedFile.create({
       data: {
         applicantId: recommender.applicantId,

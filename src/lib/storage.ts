@@ -1,28 +1,38 @@
-import { mkdir, writeFile, readFile as fsReadFile } from "node:fs/promises";
-import path from "node:path";
 import { randomUUID } from "node:crypto";
+import path from "node:path";
+import { supabaseAdmin, STORAGE_BUCKET } from "./supabaseAdmin";
 
-// Files live outside `public/` and are only ever served through the
-// authenticated /api/files/[id] route — never a static, guessable URL.
-// Swapping to Supabase Storage/S3 later means replacing the two functions
-// below; callers only deal with an opaque `storagePath`.
-const STORAGE_ROOT = path.join(process.cwd(), "storage");
+// Files are only ever served through the authenticated /api/files/[id]
+// route — never a public bucket URL. Callers only deal with an opaque
+// `storagePath` (the object key within STORAGE_BUCKET).
 
 export async function saveFile(
   buffer: Buffer,
   originalFilename: string,
+  mimeType: string = "application/octet-stream",
 ): Promise<string> {
-  await mkdir(STORAGE_ROOT, { recursive: true });
   const ext = path.extname(originalFilename);
   const storagePath = `${randomUUID()}${ext}`;
-  await writeFile(path.join(STORAGE_ROOT, storagePath), buffer);
+
+  const { error } = await supabaseAdmin.storage
+    .from(STORAGE_BUCKET)
+    .upload(storagePath, buffer, {
+      contentType: mimeType,
+      upsert: false,
+    });
+  if (error) {
+    throw new Error(`Failed to upload file to storage: ${error.message}`);
+  }
+
   return storagePath;
 }
 
 export async function readStoredFile(storagePath: string): Promise<Buffer> {
-  const resolved = path.join(STORAGE_ROOT, storagePath);
-  if (!resolved.startsWith(STORAGE_ROOT)) {
-    throw new Error("Invalid storage path");
+  const { data, error } = await supabaseAdmin.storage
+    .from(STORAGE_BUCKET)
+    .download(storagePath);
+  if (error || !data) {
+    throw new Error(`Failed to read file from storage: ${error?.message ?? "not found"}`);
   }
-  return fsReadFile(resolved);
+  return Buffer.from(await data.arrayBuffer());
 }

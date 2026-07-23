@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
     REQUIRED_FILE_KINDS.map(async (kind) => {
       const file = fileEntries[kind];
       const buffer = Buffer.from(await file.arrayBuffer());
-      const storagePath = await saveFile(buffer, file.name);
+      const storagePath = await saveFile(buffer, file.name, file.type);
       return {
         kind,
         storagePath,

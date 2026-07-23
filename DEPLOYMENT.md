@@ -1,8 +1,9 @@
 # Going live checklist
 
-Status: database is live on Supabase Postgres (✅ done). File storage and
-email are still local/dev-only. Work through the rest of this list before
-the real January 1 launch.
+Status: database (Supabase Postgres) and file storage (Supabase Storage) are
+both live ✅. Email is still local/dev-only (writes to `.dev-emails/`
+instead of sending). Work through the rest of this list before the real
+January 1 launch.
 
 ## 1. Database — done ✅
 
@@ -23,11 +24,13 @@ Committee accounts are seeded (`npm run seed`) — **replace the placeholder
 emails/passwords in `prisma/seed.ts`** before real use, and distribute the
 printed credentials securely (not over plain email).
 
-## 2. File storage — swap local disk for Supabase Storage (or S3)
+## 2. File storage — done ✅
 
-`src/lib/storage.ts` has exactly two functions (`saveFile`, `readStoredFile`).
-Replace their bodies with Supabase Storage (or S3) calls; nothing else in
-the app needs to change since callers only ever see an opaque `storagePath`.
+`src/lib/storage.ts` uploads to/downloads from a private Supabase Storage
+bucket (`SUPABASE_STORAGE_BUCKET`, default `uploads`) via the service-role
+key (`SUPABASE_SERVICE_ROLE_KEY` — server-only, never expose to the
+browser). Files are still only ever served through the authenticated
+`/api/files/[id]` route, never a public bucket URL.
 
 ## 3. Email — Resend
 
