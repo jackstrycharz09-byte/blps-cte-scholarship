@@ -14,7 +14,7 @@ const REQUIRED_FILE_KINDS = ["resume", "transcript", "cte_proof"] as const;
 export async function POST(request: NextRequest) {
   if (!applicationsAreOpen()) {
     return NextResponse.json(
-      { error: "Applications open January 1, 2027." },
+      { error: "Applications open December 1, 2026." },
       { status: 403 },
     );
   }

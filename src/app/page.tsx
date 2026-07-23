@@ -5,7 +5,7 @@ import { getApplicationWindowStatus } from "@/lib/config";
 
 const COPY = {
   not_yet_open: {
-    body: "Applications for the Bend-La Pine Schools Student Voice Council CTE Scholarship open January 1, 2027. See the requirements and get a head start.",
+    body: "Applications for the Bend-La Pine Schools Student Voice Council CTE Scholarship open December 1, 2026. See the requirements and get a head start.",
     button: "View requirements",
   },
   open: {

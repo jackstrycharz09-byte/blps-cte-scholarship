@@ -68,7 +68,7 @@ export default function ApplyPage() {
         <Card className="space-y-5">
           <div>
             <h2 className="font-heading text-xl font-bold text-maroon">
-              Applications open January 1, 2027
+              Applications open December 1, 2026
             </h2>
             <p className="mt-2 text-sm text-foreground/70">
               This form isn&rsquo;t accepting submissions yet. Here&rsquo;s what you&rsquo;ll need so
