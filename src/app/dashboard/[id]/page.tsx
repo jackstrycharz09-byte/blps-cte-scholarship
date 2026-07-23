@@ -11,7 +11,7 @@ import { RATING_TRAITS } from "@/lib/validation";
 const FILE_KIND_LABELS: Record<string, string> = {
   resume: "Resume",
   transcript: "Transcript",
-  cte_proof: "Proof of CTE coursework",
+  cte_proof: "Proof of CTE coursework, internship, or project",
 };
 
 export default async function ApplicantDetailPage({
@@ -72,7 +72,9 @@ export default async function ApplicantDetailPage({
               </div>
             </dl>
             <div>
-              <h4 className="text-sm font-medium text-foreground/70 mb-1">CTE coursework</h4>
+              <h4 className="text-sm font-medium text-foreground/70 mb-1">
+                CTE coursework, internship, or project
+              </h4>
               <p className="text-sm whitespace-pre-wrap">{applicant.cteCoursework}</p>
             </div>
             <div>

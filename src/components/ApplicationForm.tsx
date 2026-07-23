@@ -166,10 +166,10 @@ export function ApplicationForm() {
       <Card className="space-y-4">
         <h2 className="font-heading text-lg font-bold text-maroon">CTE background</h2>
         <Field
-          label="CTE coursework completed"
+          label="CTE coursework, internship, or project"
           htmlFor="cteCoursework"
           required
-          hint="Must represent at least one full year of CTE coursework"
+          hint="Must represent at least one full year. CTE coursework is strongly recommended, but a year-long CTE-related internship or project also qualifies."
           error={errors.cteCoursework?.message}
         >
           <TextArea id="cteCoursework" rows={4} {...register("cteCoursework")} />
@@ -206,7 +206,7 @@ export function ApplicationForm() {
         />
         <FileUploadField
           id="cte_proof"
-          label="Proof of CTE coursework"
+          label="Proof of CTE coursework, internship, or project"
           accept="application/pdf,image/png,image/jpeg"
           hint="PDF or image"
           file={files.cte_proof}

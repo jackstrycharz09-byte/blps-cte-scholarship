@@ -67,7 +67,7 @@ export const applicationFormSchema = z
       .trim()
       .min(20, {
         error:
-          "Describe your CTE coursework in more detail — it must represent at least one full year.",
+          "Describe your CTE coursework, internship, or project in more detail — it must represent at least one full year.",
       }),
     extracurriculars: z
       .string()
@@ -122,7 +122,7 @@ export const FILE_UPLOAD_LIMITS = {
   resume: { label: "Resume", accept: ["application/pdf"], maxSizeMb: 10 },
   transcript: { label: "Transcript", accept: ["application/pdf"], maxSizeMb: 10 },
   cte_proof: {
-    label: "Proof of CTE coursework",
+    label: "Proof of CTE coursework, internship, or project",
     accept: ["application/pdf", "image/png", "image/jpeg"],
     maxSizeMb: 10,
   },
