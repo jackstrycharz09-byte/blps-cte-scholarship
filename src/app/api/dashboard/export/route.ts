@@ -28,6 +28,7 @@ export async function GET() {
     "Weighted GPA",
     "Submitted",
     "Status",
+    "Decision published",
     "Recommender 1",
     "Recommender 1 status",
     "Recommender 2",
@@ -47,6 +48,7 @@ export async function GET() {
       formatDate(applicant.submittedAt),
       APPLICANT_STATUS_LABELS[applicant.status as keyof typeof APPLICANT_STATUS_LABELS] ??
         applicant.status,
+      applicant.decisionPublished ? "Yes" : "No",
       rec1?.name ?? "",
       rec1 ? (RECOMMENDER_STATUS_LABELS[rec1.status] ?? rec1.status) : "",
       rec2?.name ?? "",

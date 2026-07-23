@@ -122,3 +122,30 @@ export async function sendRecommenderSubmittedConfirmationEmail(args: {
     `),
   });
 }
+
+export async function sendDecisionEmail(args: {
+  to: string;
+  applicantName: string;
+  status: "awarded" | "not_selected";
+}) {
+  if (args.status === "awarded") {
+    return sendEmail({
+      to: args.to,
+      subject: "You've been awarded the CTE Scholarship",
+      html: wrapEmail(`
+        <p>Hi ${args.applicantName},</p>
+        <p>Congratulations! The Student Voice Council is pleased to award you the Bend-La Pine Schools CTE Scholarship. Thank you for the work you put into your application.</p>
+        <p>Someone from the committee will follow up with next steps.</p>
+      `),
+    });
+  }
+  return sendEmail({
+    to: args.to,
+    subject: "Update on your CTE Scholarship application",
+    html: wrapEmail(`
+      <p>Hi ${args.applicantName},</p>
+      <p>Thank you for applying for the Bend-La Pine Schools Student Voice Council CTE Scholarship. After careful review, we were not able to select you for this year's award.</p>
+      <p>We received a strong pool of applicants, and we appreciate the time you put into your application. We encourage you to stay involved in your CTE pathway and to consider applying again in the future.</p>
+    `),
+  });
+}

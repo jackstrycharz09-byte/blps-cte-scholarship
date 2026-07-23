@@ -50,7 +50,16 @@ export default async function ApplicantDetailPage({
           <h2 className="font-heading text-2xl font-bold text-maroon">{applicant.fullName}</h2>
           <p className="text-sm text-foreground/60">{applicant.email}</p>
         </div>
-        <StatusControl applicantId={applicant.id} initialStatus={applicant.status} />
+        <div className="flex flex-col items-end gap-1">
+          <StatusControl applicantId={applicant.id} initialStatus={applicant.status} />
+          {(applicant.status === "awarded" || applicant.status === "not_selected") && (
+            <span className="text-xs text-foreground/50">
+              {applicant.decisionPublished
+                ? "Decision emailed to applicant"
+                : "Not yet emailed — use Publish decisions on the list page"}
+            </span>
+          )}
+        </div>
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">

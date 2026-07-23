@@ -12,18 +12,19 @@ datasource db {
 
 // status: "under_review" | "recommended" | "not_selected" | "awarded"
 model Applicant {
-  id               String   @id @default(cuid())
-  fullName         String
-  email            String
-  unweightedGpa    Float
-  weightedGpa      Float
-  cteCoursework    String
-  extracurriculars String
-  essay1           String
-  essay2           String
-  essay3           String
-  status           String   @default("under_review")
-  submittedAt      DateTime @default(now())
+  id                String   @id @default(cuid())
+  fullName          String
+  email             String
+  unweightedGpa     Float
+  weightedGpa       Float
+  cteCoursework     String
+  extracurriculars  String
+  essay1            String
+  essay2            String
+  essay3            String
+  status            String   @default("under_review")
+  decisionPublished Boolean  @default(false)
+  submittedAt       DateTime @default(now())
 
   files        UploadedFile[]
   recommenders Recommender[]
