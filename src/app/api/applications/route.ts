@@ -3,6 +3,7 @@ import { prisma } from "@/lib/prisma";
 import { saveFile } from "@/lib/storage";
 import { generateToken } from "@/lib/tokens";
 import { applicationFormSchema, validateUploadedFile } from "@/lib/validation";
+import { applicationsAreOpen } from "@/lib/config";
 import {
   sendApplicantConfirmationEmail,
   sendRecommenderInviteEmail,
@@ -11,6 +12,13 @@ import {
 const REQUIRED_FILE_KINDS = ["resume", "transcript", "cte_proof"] as const;
 
 export async function POST(request: NextRequest) {
+  if (!applicationsAreOpen()) {
+    return NextResponse.json(
+      { error: "Applications open January 1, 2027." },
+      { status: 403 },
+    );
+  }
+
   const formData = await request.formData();
 
   // Honeypot: a hidden field real users never fill. Bots that skip the
