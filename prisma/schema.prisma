@@ -1,0 +1,95 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+//
+// Local dev uses SQLite to avoid a Docker dependency. Fields deliberately
+// avoid Postgres-only features (no native `enum`) so switching the
+// datasource `provider` to "postgresql" for the real Supabase deployment
+// is a one-line change, not a schema rewrite.
+
+generator client {
+  provider = "prisma-client"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "sqlite"
+}
+
+// status: "under_review" | "recommended" | "not_selected" | "awarded"
+model Applicant {
+  id               String   @id @default(cuid())
+  fullName         String
+  email            String
+  unweightedGpa    Float
+  weightedGpa      Float
+  cteCoursework    String
+  extracurriculars String
+  essay1           String
+  essay2           String
+  essay3           String
+  status           String   @default("under_review")
+  submittedAt      DateTime @default(now())
+
+  files        UploadedFile[]
+  recommenders Recommender[]
+  reviews      Review[]
+}
+
+// kind: "resume" | "transcript" | "cte_proof" | "recommender_letter"
+model UploadedFile {
+  id               String   @id @default(cuid())
+  applicantId      String
+  kind             String
+  storagePath      String
+  originalFilename String
+  mimeType         String
+  size             Int
+  uploadedAt       DateTime @default(now())
+
+  applicant   Applicant    @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  recommender Recommender?
+}
+
+// status: "not_sent" | "sent" | "received"
+model Recommender {
+  id           String    @id @default(cuid())
+  applicantId  String
+  name         String
+  email        String
+  relationship String
+  token        String    @unique
+  status       String    @default("not_sent")
+  sentAt       DateTime?
+  remindedAt   DateTime?
+  submittedAt  DateTime?
+  letterText   String?
+  letterFileId String?   @unique
+  ratings      String?
+
+  applicant  Applicant     @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  letterFile UploadedFile? @relation(fields: [letterFileId], references: [id])
+}
+
+model CommitteeMember {
+  id           String   @id @default(cuid())
+  name         String
+  email        String   @unique
+  passwordHash String
+  createdAt    DateTime @default(now())
+
+  reviews Review[]
+}
+
+model Review {
+  id                String   @id @default(cuid())
+  applicantId       String
+  committeeMemberId String
+  score             Int?
+  comments          String?
+  updatedAt         DateTime @updatedAt
+
+  applicant       Applicant       @relation(fields: [applicantId], references: [id], onDelete: Cascade)
+  committeeMember CommitteeMember @relation(fields: [committeeMemberId], references: [id], onDelete: Cascade)
+
+  @@unique([applicantId, committeeMemberId])
+}
