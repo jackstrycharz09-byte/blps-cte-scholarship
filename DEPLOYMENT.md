@@ -32,12 +32,18 @@ key (`SUPABASE_SERVICE_ROLE_KEY` — server-only, never expose to the
 browser). Files are still only ever served through the authenticated
 `/api/files/[id]` route, never a public bucket URL.
 
-## 3. Email — Resend
+## 3. Email — Resend (partially done ⚠️)
 
-1. Create a Resend account, verify a sending domain (e.g. `scholarship.bendlapineschools.org` or similar).
-2. Set `RESEND_API_KEY` and `EMAIL_FROM` (using the verified domain) in
-   production env vars. Once `RESEND_API_KEY` is set, `src/lib/email.ts`
-   automatically sends real emails instead of writing to `.dev-emails/`.
+`RESEND_API_KEY` is set and sending works — but **only to the Resend
+account's own signup email** until a sending domain is verified. Real
+applicants and recommenders will get nothing until this is done:
+
+1. In the Resend dashboard, go to **Domains → Add Domain**, enter a domain
+   you control (a subdomain of the school's domain, or any domain you own).
+2. Add the DNS records Resend gives you (SPF/DKIM TXT records, typically)
+   wherever that domain's DNS is managed.
+3. Once verified, change `EMAIL_FROM` to use an address on that domain
+   (e.g. `scholarship@yourdomain.org`) instead of `onboarding@resend.dev`.
 
 ## 4. Auth
 
